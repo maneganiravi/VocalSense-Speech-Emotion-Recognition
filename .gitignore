@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.idea/
+.vscode/
+database/*.db
+database/*.db-shm
+database/*.db-wal
+models/*.keras
+models/*.pkl
+models/training_metrics.json
+models/preprocessing_config.json
+data/RAVDESS/
+dataset_config.json

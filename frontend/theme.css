@@ -1,0 +1,196 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --panel: #111b2e;
+  --panel2: #0f192a;
+  --line: #26354b;
+  --text: #e7edf6;
+  --muted: #97a6bb;
+  --accent: #63b3ff;
+  --blue: #9aaeff;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.sidebar {
+  background: #0d1727;
+  border-color: #1e2b40;
+}
+
+.brand {
+  color: #f2f6fc;
+}
+
+.brand-light {
+  color: #b0bfd3;
+}
+
+.nav-item {
+  color: #9aa9bd;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: #17243a;
+}
+
+.nav-item.active {
+  color: var(--accent);
+  background: #142a40;
+}
+
+.topbar {
+  border-color: #1e2b40;
+}
+
+.panel,
+.status-chip,
+.summary-card {
+  border-color: var(--line);
+  background-color: var(--panel);
+}
+
+.dashboard-overview,
+.overview-header-panel,
+.result-panel {
+  border-color: var(--line);
+  background: linear-gradient(135deg, #111d31, #101a2b 70%, #102337);
+}
+
+.dashboard-card {
+  border-color: #26354b;
+  background: linear-gradient(180deg, #142137, #101a2b);
+}
+
+.dashboard-card span,
+.status-label,
+.kpi-card span {
+  color: #a5b3c7;
+}
+
+.dashboard-card strong,
+.status-chip strong,
+.kpi-card strong {
+  color: #edf4ff;
+}
+
+.dashboard-pill,
+.local-card {
+  border-color: #2b3c54;
+  background: #111d30;
+}
+
+.local-dot,
+.status-indicator.online,
+.live-badge span {
+  background: var(--accent);
+  box-shadow: 0 0 9px #63b3ff66;
+}
+
+.drop-zone {
+  border-color: #344762;
+  background: #0e192b;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: var(--accent);
+  background: #12243a;
+}
+
+.upload-icon,
+.file-icon {
+  background: #192b43;
+  color: var(--accent);
+}
+
+.selected-file,
+.model-votes > div {
+  border-color: #293a52;
+  background: #0e192a;
+}
+
+.primary-button,
+.mini-button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #071525;
+}
+
+.primary-button:hover:not(:disabled),
+.mini-button:hover {
+  background: #8ac8ff;
+}
+
+.mini-button.secondary {
+  border-color: #314967;
+  background: #14243a;
+  color: #c5dcf5;
+}
+
+.mini-button.secondary:hover {
+  background: #1a304c;
+}
+
+.winner-emotion,
+.choose-link,
+.panel-link,
+.recent-item span,
+.summary-card small {
+  color: var(--accent);
+}
+
+.prob-fill,
+.distribution-bar span {
+  background: linear-gradient(90deg, #438ee8, #7cc3ff);
+}
+
+.prob-track,
+.distribution-bar {
+  background: #1b2a40;
+  border-color: #293a52;
+}
+
+.text-button {
+  border-color: #345575;
+  background: #10243a;
+  color: #8ac8ff;
+}
+
+.text-button:hover {
+  background: #18304b;
+}
+
+.compact-select,
+.model-select-wrap select,
+.probability-heading select,
+.performance-toolbar select,
+.history-controls input {
+  border-color: #30425c;
+  background: #0d182a;
+  color: var(--text);
+}
+
+.nav-item:focus-visible,
+.primary-button:focus-visible,
+.mini-button:focus-visible,
+.text-button:focus-visible,
+.compact-select:focus-visible,
+.model-select-wrap select:focus-visible,
+.history-controls input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.history-detail-card {
+  border-color: #344762;
+  background: #111b2e;
+}
+
+.history-model-detail,
+.secondary-details {
+  border-color: #293a52;
+}

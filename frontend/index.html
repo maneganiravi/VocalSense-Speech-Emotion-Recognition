@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Local speech emotion recognition studio powered by CNN and CNN-BiLSTM models.">
+  <title>VocalSense Studio</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="stylesheet" href="/static/theme.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="VocalSense Studio home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+        <span>vocal<span class="brand-light">sense</span><small>LOCAL INTELLIGENCE</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="navigation" aria-label="Main navigation">
+        <button class="nav-item active" data-page="studio"><span class="nav-icon">◉</span> Studio</button>
+        <button class="nav-item" data-page="notebook"><span class="nav-icon">▤</span> Notebook pipeline</button>
+        <button class="nav-item" data-page="performance"><span class="nav-icon">⌁</span> Model performance</button>
+        <button class="nav-item" data-page="history"><span class="nav-icon">◷</span> Prediction history</button>
+        <button class="nav-item" data-page="features"><span class="nav-icon">▦</span> Feature information</button>
+        <button class="nav-item" data-page="about"><span class="nav-icon">⚙</span> Settings &amp; about</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="local-card"><span class="local-dot"></span><div><strong>Runs locally</strong><small>Your audio stays on this device</small></div></div>
+        <span class="version-label">VOCALSENSE · V1.0</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumb-page">Studio</strong></div>
+        <div class="top-status"><span class="status-indicator" id="status-indicator"></span><span id="status-text">Connecting to local API…</span></div>
+      </header>
+
+      <section class="page active" id="page-studio">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">SPEECH EMOTION RECOGNITION</div>
+            <h1>VocalSense <span>Studio</span></h1>
+            <p>Understand the emotion behind every voice.</p>
+          </div>
+          <div class="heading-badge"><span>◈</span> CNN + BiLSTM ensemble</div>
+        </div>
+
+        <div class="dashboard-overview panel">
+          <div class="dashboard-header">
+            <div>
+              <span class="step-index">SYSTEM</span>
+              <h2>Dashboard overview</h2>
+            </div>
+            <div class="dashboard-pill" id="dashboard-status-pill">Checking models…</div>
+          </div>
+
+          <div class="overview-header-panel">
+            <div class="title-block">
+              <div class="brand-mini">VocalSense Studio</div>
+              <div class="muted-line">Speech Emotion Recognition</div>
+            </div>
+            <div class="status-badges">
+              <div class="status-chip"><span class="status-label">Backend</span><strong id="overview-backend-status">Checking…</strong></div>
+              <div class="status-chip"><span class="status-label">CNN</span><strong id="overview-cnn-status">Checking…</strong></div>
+              <div class="status-chip"><span class="status-label">BiLSTM</span><strong id="overview-bilstm-status">Checking…</strong></div>
+              <div class="status-chip"><span class="status-label">Updated</span><strong id="overview-last-updated">—</strong></div>
+            </div>
+          </div>
+
+          <div class="dashboard-cards kpi-grid">
+            <div class="dashboard-card kpi-card">
+              <span>Total predictions</span>
+              <strong id="dashboard-total-predictions">0</strong>
+              <small id="dashboard-total-predictions-meta">Latest history</small>
+            </div>
+            <div class="dashboard-card kpi-card">
+              <span>Models loaded</span>
+              <strong id="dashboard-models-loaded">0</strong>
+              <small>Saved model set</small>
+            </div>
+            <div class="dashboard-card kpi-card">
+              <span>Emotion classes</span>
+              <strong id="dashboard-class-count">—</strong>
+              <small>Supported labels</small>
+            </div>
+            <div class="dashboard-card kpi-card">
+              <span>Dataset status</span>
+              <strong id="dashboard-dataset-status">—</strong>
+              <small id="dashboard-dataset-detail">Checking dataset</small>
+            </div>
+          </div>
+
+          <div class="action-grid">
+            <button class="mini-button" data-nav="studio">Run analysis</button>
+            <button class="mini-button secondary" data-nav="performance">View metrics</button>
+            <button class="mini-button secondary" data-nav="notebook">Notebook pipeline</button>
+            <button class="mini-button secondary" data-nav="history">Recent history</button>
+          </div>
+        </div>
+
+        <div class="studio-grid analysis-layout">
+          <div class="panel upload-panel quick-analysis-panel">
+            <div class="panel-title"><div><span class="step-index">01</span><h2>Quick analysis</h2></div><span class="file-limit">WAV · max 20 MB · 0.5–30 sec</span></div>
+
+            <div class="sample-picker-row">
+              <label for="sample-audio-select">Sample audio</label>
+              <select id="sample-audio-select" class="compact-select">
+                <option value="">Pick from dataset</option>
+              </select>
+            </div>
+
+            <label class="drop-zone" id="drop-zone" for="audio-input">
+              <input type="file" id="audio-input" accept=".wav,audio/wav,audio/x-wav">
+              <span class="upload-icon">↑</span><strong>Drop your audio here</strong><span>or <span class="choose-link">browse files</span></span>
+              <span class="drop-hint">WAV files between 0.5 and 30 seconds</span>
+            </label>
+            <div class="selected-file hidden" id="selected-file">
+              <div class="file-icon">♫</div><div class="file-meta"><strong id="file-name"></strong><span id="file-details"></span></div>
+              <button class="remove-file" id="remove-file" aria-label="Remove audio">×</button>
+            </div>
+            <audio class="audio-player hidden" id="audio-player" controls></audio>
+            <div class="analysis-controls-row">
+              <label class="model-select-wrap">
+                <span>Model</span>
+                <select id="analysis-model-select">
+                  <option value="ensemble">CNN + BiLSTM Ensemble</option>
+                  <option value="cnn">CNN</option>
+                  <option value="cnn_bilstm">CNN-BiLSTM</option>
+                </select>
+              </label>
+            </div>
+            <button class="primary-button" id="predict-button" disabled><span class="button-text">Analyze emotion</span><span class="button-arrow">→</span></button>
+            <p class="privacy-note">⌑ &nbsp; Audio is processed locally and never uploaded to a cloud service.</p>
+            <div class="error-message hidden" id="error-message" role="alert"></div>
+          </div>
+
+          <div class="panel result-panel" id="result-panel">
+            <div class="panel-title"><div><span class="step-index">02</span><h2>Emotion analysis</h2></div><span class="live-badge"><span></span> LIVE RESULTS</span></div>
+            <div class="empty-state" id="empty-result"><div class="sound-orbit"><span>♫</span></div><strong>Ready when you are</strong><p>Upload a WAV recording and run an analysis to see the results.</p></div>
+            <div class="loading-state hidden" id="loading-state"><span class="spinner"></span><strong>Analyzing your audio</strong><p>Running CNN and CNN-BiLSTM inference…</p></div>
+            <div class="prediction-results hidden" id="prediction-results">
+              <div class="winner-label" id="winner-label">ENSEMBLE PREDICTION</div>
+              <div class="winner-emotion" id="winner-emotion">—</div>
+              <div class="winner-label" id="prediction-confidence">Confidence —</div>
+              <p class="prediction-caveat">Model estimate, not a certainty. Use the probabilities and model comparison as context.</p>
+              <div class="model-votes">
+                <div><span>CNN</span><strong id="cnn-emotion">—</strong></div>
+                <div><span>CNN-BiLSTM</span><strong id="bilstm-emotion">—</strong></div>
+                <div><span>ENSEMBLE</span><strong id="ensemble-emotion">—</strong></div>
+              </div>
+              <div class="probability-heading"><span>CLASS PROBABILITIES</span><label>Model <select id="prediction-model"><option value="ensemble">Ensemble</option><option value="cnn">CNN</option><option value="cnn_bilstm">CNN-BiLSTM</option></select></label></div>
+              <div class="probability-chart" id="probability-chart"></div>
+              <div class="result-footer"><span id="prediction-time"></span><button class="text-button" id="analyze-another" type="button">Analyze another file</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-lower-grid">
+          <div class="panel chart-panel">
+            <div class="panel-title"><div><span class="step-index">03</span><h2>Emotion distribution</h2></div><span class="file-limit">Saved history</span></div>
+            <div id="emotion-distribution-chart" class="mini-chart"></div>
+            <div id="emotion-distribution-empty" class="empty-mini-state hidden">No prediction history yet. Analyze a WAV file to generate a chart.</div>
+          </div>
+
+          <div class="panel chart-panel">
+            <div class="panel-title"><div><span class="step-index">04</span><h2>Model summary</h2></div><a class="panel-link" href="#" data-nav="performance">View full metrics</a></div>
+            <div id="model-summary-cards" class="summary-card-grid"></div>
+          </div>
+
+          <div class="panel chart-panel">
+            <div class="panel-title"><div><span class="step-index">05</span><h2>Recent predictions</h2></div><a class="panel-link" href="#" data-nav="history">Open history</a></div>
+            <div id="recent-predictions-list" class="recent-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-notebook">
+        <div class="page-heading"><div><div class="eyebrow">NOTEBOOK REPRODUCTION</div><h1>Training <span>pipeline</span></h1><p>Stages and results are loaded from the trained artifacts—no placeholder scores.</p></div></div>
+        <div class="notebook-stages">
+          <section class="panel notebook-stage" id="stage-dataset">
+            <div class="panel-title"><div><span class="step-index">01</span><h2>Dataset</h2></div><span class="file-limit">RAVDESS speech clips</span></div>
+            <div class="metrics-grid" id="notebook-dataset-summary"></div>
+            <p class="muted" id="notebook-dataset-note"></p>
+            <div class="chart-container" id="notebook-dataset-chart" aria-label="Dataset emotion distribution"></div>
+            <details class="secondary-details"><summary>View sample records</summary><div class="table-scroll" id="notebook-samples-table"></div></details>
+          </section>
+          <section class="panel notebook-stage" id="stage-features">
+            <div class="panel-title"><div><span class="step-index">02</span><h2>Features</h2></div></div>
+            <div class="metrics-grid" id="notebook-feature-summary"></div>
+            <p class="muted" id="notebook-feature-description"></p>
+            <div id="notebook-scaler-info"></div>
+          </section>
+          <section class="panel notebook-stage" id="stage-split">
+            <div class="panel-title"><div><span class="step-index">03</span><h2>Actor-independent split</h2></div></div>
+            <div class="table-scroll" id="notebook-splits-table"></div>
+          </section>
+          <section class="panel notebook-stage" id="stage-cnn">
+            <div class="panel-title"><div><span class="step-index">04</span><h2>CNN</h2></div></div>
+            <div class="metrics-grid" id="notebook-cnn-summary"></div>
+            <details class="secondary-details"><summary>Training details and curves</summary><pre class="architecture-block" id="notebook-cnn-architecture"></pre><div class="chart-container" id="notebook-cnn-curve" aria-label="CNN accuracy and loss curves"></div></details>
+          </section>
+          <section class="panel notebook-stage" id="stage-cnn-bilstm">
+            <div class="panel-title"><div><span class="step-index">05</span><h2>CNN-BiLSTM</h2></div></div>
+            <div class="metrics-grid" id="notebook-cnn-bilstm-summary"></div>
+            <details class="secondary-details"><summary>Training details and curves</summary><pre class="architecture-block" id="notebook-cnn-bilstm-architecture"></pre><div class="chart-container" id="notebook-cnn-bilstm-curve" aria-label="CNN-BiLSTM accuracy and loss curves"></div></details>
+          </section>
+          <section class="panel notebook-stage" id="stage-ensemble">
+            <div class="panel-title"><div><span class="step-index">06</span><h2>Ensemble and comparison</h2></div></div>
+            <div class="table-scroll" id="notebook-comparison-table"></div>
+          </section>
+          <section class="panel notebook-stage" id="stage-classification">
+            <div class="panel-title"><div><span class="step-index">07</span><h2>Classification report</h2></div></div>
+            <div class="stage-controls">
+              <label>Model <select id="notebook-report-model"></select></label>
+              <label>Evaluation split <select id="notebook-report-split"><option value="validation">Validation</option><option value="test">Test</option></select></label>
+            </div>
+            <div class="table-scroll" id="notebook-classification-table"></div>
+            <div class="chart-container" id="notebook-confusion-chart" aria-label="Confusion matrix heatmap"></div>
+          </section>
+          <section class="panel notebook-stage" id="stage-experiments">
+            <div class="panel-title"><div><span class="step-index">08</span><h2>Temporal and regularized experiments</h2></div></div>
+            <div class="metrics-grid" id="notebook-experiment-summary"></div>
+            <details class="secondary-details"><summary>View experiment training curves</summary><div class="experiment-curves">
+              <div class="chart-container" id="notebook-temporal-curve" aria-label="Temporal model accuracy and loss curves"></div>
+              <div class="chart-container" id="notebook-regularized-curve" aria-label="Regularized model accuracy and loss curves"></div>
+            </div></details>
+          </section>
+          <section class="panel notebook-stage" id="stage-live-demo">
+            <div class="panel-title"><div><span class="step-index">09</span><h2>Live demo</h2></div><span class="file-limit">WAV · max 20 MB</span></div>
+            <label class="drop-zone notebook-drop-zone" id="notebook-drop-zone" for="notebook-audio-input">
+              <input type="file" id="notebook-audio-input" accept=".wav,audio/wav,audio/x-wav">
+              <span class="upload-icon">↑</span><strong>Drop a WAV clip here</strong><span>or <span class="choose-link">browse files</span></span>
+              <span class="drop-hint">Audio is processed locally with the saved scaler and models</span>
+            </label>
+            <div class="selected-file hidden" id="notebook-selected-file"><div class="file-icon">♫</div><div class="file-meta"><strong id="notebook-file-name"></strong><span id="notebook-file-details"></span></div><button class="remove-file" id="notebook-remove-file" aria-label="Remove audio">×</button></div>
+            <audio class="audio-player hidden" id="notebook-audio-player" controls></audio>
+            <button class="primary-button" id="notebook-predict-button" disabled><span class="button-text">Analyze emotion</span><span class="button-arrow">→</span></button>
+            <div class="error-message hidden" id="notebook-error-message" role="alert"></div>
+            <div class="prediction-results hidden" id="notebook-prediction-results">
+              <div class="winner-label">ENSEMBLE PREDICTION</div><div class="winner-emotion" id="notebook-winner-emotion">—</div>
+              <div class="model-votes"><div><span>CNN</span><strong id="notebook-cnn-emotion">—</strong></div><div><span>CNN-BiLSTM</span><strong id="notebook-bilstm-emotion">—</strong></div></div>
+              <div class="probability-heading"><span>CLASS PROBABILITIES</span><span id="notebook-prediction-confidence"></span></div>
+              <div class="probability-chart" id="notebook-probability-chart"></div>
+            </div>
+            <div class="table-scroll" id="notebook-history-table"></div>
+          </section>
+        </div>
+      </section>
+      <section class="page" id="page-performance">
+        <div class="page-heading"><div><div class="eyebrow">HELD-OUT EVALUATION</div><h1>Model <span>performance</span></h1><p>Metrics from your actual actor-separated evaluation set.</p></div></div>
+        <div class="notice-panel" id="performance-notice">Evaluation metrics will appear after you train both models.</div>
+        <div id="performance-content" class="hidden">
+          <div class="performance-toolbar">
+            <label>Evaluation split <select id="performance-split"><option value="validation">Validation</option><option value="test">Test</option></select></label>
+            <label>Best model by <select id="performance-metric"><option value="accuracy">Accuracy</option><option value="macro_f1">Macro F1</option><option value="weighted_f1">Weighted F1</option></select></label>
+            <strong id="performance-best-model">Best model: Not available</strong>
+          </div>
+          <div class="table-scroll panel" id="metrics-table"></div>
+          <div class="panel confusion-panel"><div class="panel-title"><div><span class="step-index">01</span><h2>Confusion matrix</h2></div><div class="stage-controls"><label>Model <select id="confusion-model"><option value="ensemble">Ensemble</option><option value="cnn">CNN</option><option value="cnn_bilstm">CNN-BiLSTM</option></select></label><span class="file-limit">Rows = actual · columns = predicted</span></div></div><p class="muted">Each cell counts examples of the actual emotion (row) predicted as the column emotion.</p><div class="table-scroll" id="confusion-table"></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-history">
+        <div class="page-heading"><div><div class="eyebrow">LOCAL SQLITE DATABASE</div><h1>Prediction <span>history</span></h1><p>Recent analyses saved on this device.</p></div></div>
+        <div class="panel history-panel">
+          <div class="panel-title"><div><span class="step-index">01</span><h2>Recent predictions</h2></div><span class="file-limit">Most recent 100</span></div>
+          <div class="history-controls"><label for="history-search">Search filename or emotion</label><input id="history-search" type="search" placeholder="Filter saved predictions"></div>
+          <div class="table-scroll" id="history-table"></div>
+          <div class="history-detail hidden" id="history-detail" role="dialog" aria-modal="true" aria-labelledby="history-detail-title"><div class="history-detail-card"><button class="text-button" id="history-detail-close" type="button">Close</button><h2 id="history-detail-title">Prediction details</h2><div id="history-detail-content"></div></div></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-features">
+        <div class="page-heading"><div><div class="eyebrow">AUDIO PIPELINE</div><h1>Feature <span>information</span></h1><p>One shared preprocessing pipeline keeps training and prediction consistent.</p></div></div>
+        <div class="feature-grid">
+          <article class="panel feature-card"><span class="feature-number">01</span><h2>Audio input</h2><p>Librosa loads uploaded audio as mono and resamples it to <strong>22,050 Hz</strong>. Clips must be <strong>0.5–30 seconds</strong>; this pipeline does not pad or crop them to a fixed duration.</p></article>
+          <article class="panel feature-card"><span class="feature-number">02</span><h2>CNN and CNN-BiLSTM features</h2><p>Both models use 108 summary values: mean and standard deviation for <strong>40 MFCCs, zero-crossing rate, RMS energy, and 12 chroma values</strong>.</p></article>
+          <article class="panel feature-card"><span class="feature-number">03</span><h2>Temporal experiments</h2><p>Temporal and regularized models use a <strong>64 × 54</strong> feature sequence interpolated from MFCC, zero-crossing rate, RMS, and chroma frames.</p></article>
+          <article class="panel feature-card"><span class="feature-number">04</span><h2>Scaling and evaluation</h2><p>Separate StandardScalers are fitted only on training actors. Evaluation uses fixed actor-independent train, validation, and test groups.</p></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-about">
+        <div class="page-heading"><div><div class="eyebrow">LOCAL APPLICATION</div><h1>Settings <span>&amp; about</span></h1><p>VocalSense: Speech Emotion Recognition Using CNN and CNN-BiLSTM Ensemble Learning.</p></div></div>
+        <div class="about-grid">
+          <div class="panel about-card"><span class="step-index">APPLICATION</span><h2>VocalSense Studio</h2><p>Speech Emotion Recognition Using CNN and CNN-BiLSTM Ensemble Learning. Audio inference runs locally; prediction summaries are stored in the local SQLite database.</p><div class="info-row"><span>API status</span><strong id="about-api">Checking…</strong></div><div class="info-row"><span>Model status</span><strong id="about-model">Checking…</strong></div></div>
+          <div class="panel about-card"><span class="step-index">SUPPORTED EMOTIONS</span><h2>RAVDESS labels</h2><div class="emotion-list" id="emotion-list"></div></div>
+        </div>
+      </section>
+      <footer class="footer"><span>VocalSense Studio</span><span>Private by design · Inference stays on your device</span></footer>
+    </main>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
